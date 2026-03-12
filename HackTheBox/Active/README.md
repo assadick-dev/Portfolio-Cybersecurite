@@ -14,6 +14,7 @@ We start by running an Nmap scan on the target to discover active services.
 
 Nmap shows that the target is an Active Directory domain controller for active.htb. The DNS version (6.1) confirms that the operating system is Windows Server 2008 R2 SP1. I added this domain to my /etc/hosts file to help my tools communicate correctly with the target during the next steps.
 
+![Nmap Scan](./images/add-host.png)
 
 
 ## 3. SMB Enumeration
