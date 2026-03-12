@@ -7,10 +7,10 @@
 ## 1. Résumé de l'Audit
 L'objectif était d'évaluer la sécurité d'un contrôleur de domaine. L'audit a révélé deux failles critiques de configuration permettant une compromission totale du domaine (Domain Admin).
 
-## 2. Énumération & Reconnaissance
-Le scan initial avec nmap a révélé des services Active Directory standards (SMB, Kerberos, LDAP).
+## 2. Énumération & Reconnaissance avec Nmap
+Nous allons commencer par un scan nmap de tous les ports de la machine pour decouvrir les differents services fonctionnant sur la cible.
 
-![Énumération SMB](./images/nxc_svc.png)
+![Nmap Scan](./images/nmap-scan)
 
 ## 3. Accès Initial (Exploitation GPP)
 Le partage `Replication` contenait une réplique du dossier `SYSVOL`. Une recherche récursive a permis d'extraire le fichier `Groups.xml`.
