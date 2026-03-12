@@ -57,8 +57,8 @@ I discovered that the Administrator account was linked to a Service Principal Na
 Impacket’s GetUserSPNs.py lets us request the TGS and extract the hash for offline cracking.
 ![Extraction TGS](./images/usersActif.png)
 
-Impacket’s GetUserSPNs.py lets us request the TGS and extract the hash for offline cracking.
-Cracking of Kerberos TGS Hash
+We can use hashcat with the rockyou.txt wordlist to crack the hash and obtain the password
+Ticketmaster1968 for the user active\administrator.
 ![Hashcat Crack](./images/mdp_admin.png)
 
 ## 6. Post-Exploitation & Proof of Concept
