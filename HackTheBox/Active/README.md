@@ -1,13 +1,13 @@
 # 🚩 Audit Report: "Active" (Hack The Box)
 
-| Nom | IP | Difficulté | OS |
+| Name | IP | Difficulty | OS |
 | :--- | :--- | :--- | :--- |
 | **Active** | 10.129.3.175 | Facile | Windows |
 
 ## 1. Executive Summary
 The objective of this audit was to evaluate the security of a Windows Domain Controller. The assessment revealed two critical configuration flaws: unprotected sensitive files in SMB shares and a vulnerable service account. These flaws allowed for a full domain compromise (Domain Admin).
 
-## 2. 2. Reconnaissance & Enumeration (Nmap)
+## 2. Reconnaissance & Enumeration (Nmap)
 We start by running an Nmap scan on the target to discover active services.
 
 ![Nmap Scan](./images/nmap-scan.png)
@@ -41,7 +41,7 @@ Microsoft used to store passwords this way, and although they are encrypted, the
 ![Déchiffrement GPP](./images/cleGPP.png)
 
 
-##4. Foothold
+## 4. Foothold
 The user flag can be retrieved by connecting to the Users share, and navigating to SVC_TGS 's Desktop.
 ![User Flag](./images/initial_access.png)
 
