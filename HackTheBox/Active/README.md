@@ -1,14 +1,14 @@
-# 🚩 Rapport d'Audit : Machine "Active" (Hack The Box)
+# 🚩 Audit Report: "Active" (Hack The Box)
 
 | Nom | IP | Difficulté | OS |
 | :--- | :--- | :--- | :--- |
 | **Active** | 10.129.3.175 | Facile | Windows |
 
-## 1. Résumé de l'Audit
-L'objectif était d'évaluer la sécurité d'un contrôleur de domaine. L'audit a révélé deux failles critiques de configuration permettant une compromission totale du domaine (Domain Admin).
+## 1. Executive Summary
+The objective of this audit was to evaluate the security of a Windows Domain Controller. The assessment revealed two critical configuration flaws: unprotected sensitive files in SMB shares and a vulnerable service account. These flaws allowed for a full domain compromise (Domain Admin).
 
-## 2. Énumération & Reconnaissance avec Nmap
-Nous allons commencer par un scan nmap de tous les ports de la machine pour decouvrir les differents services fonctionnant sur la cible.
+## 2. 2. Reconnaissance & Enumeration (Nmap)
+We start by running an Nmap scan on the target to discover active services.
 
 ![Nmap Scan](./images/nmap-scan.png)
 
@@ -16,7 +16,7 @@ Nmap shows that the target is an Active Directory domain controller for active.h
 
 
 
-## 3. 3. SMB Enumeration
+## 3. SMB Enumeration
 Since port 445 was open, I checked for anonymous access to the SMB shares. 
 ![Nmap Scan](./images/nxc.png)
 
@@ -27,10 +27,12 @@ Let's connect to the Replication share
 
 The Replication share usually contains Group Policy Objects (GPOs). I searched through the directories and found a file named Groups.xml.
 
-![Nmap Scan](./images/mgetSMB.png)
+![Nmap Scan](./images/grpXML.png)
 
 
 This file is a "gold mine" because it contains a cpassword — an encrypted password for the SVC_TGS user.
+
+![Nmap Scan](./images/mgetSMB.png)
 
 Microsoft used to store passwords this way, and although they are encrypted, the AES key is public knowledge. I used the gpp-decrypt tool to recover the password in cleartext.
 
@@ -38,27 +40,51 @@ Microsoft used to store passwords this way, and although they are encrypted, the
 ![Déchiffrement GPP](./images/cleGPP.png)
 
 
-**Flag Utilisateur :**
+##4. Foothold
+The user flag can be retrieved by connecting to the Users share, and navigating to SVC_TGS 's Desktop.
 ![User Flag](./images/initial_access.png)
 
-## 4. Escalade de Privilèges (Kerberoasting)
-Une fois authentifié, l'outil `GetADUsers.py` a confirmé que l'utilisateur Administrateur était actif.
 
+
+## 5. Privilege Escalation
+After gaining initial access as SVC_TGS, I started looking for a way to become a Domain Administrator. I first used the GetADUsers.py tool to list the users in the Active Directory.
 ![Utilisateurs Actifs](./images/dusers.png)
 
-L'attaque par **Kerberoasting** a été lancée pour extraire le ticket TGS du compte Administrateur, vulnérable car lié à un SPN.
+Kerberoasting Attack
+I discovered that the Administrator account was linked to a Service Principal Name (SPN). This made it vulnerable to a Kerberoasting attack.
 
+Impacket’s GetUserSPNs.py lets us request the TGS and extract the hash for offline cracking.
 ![Extraction TGS](./images/usersActif.png)
 
-Le hash a été cassé hors-ligne avec `Hashcat` en utilisant le dictionnaire `rockyou.txt`.
-
+Impacket’s GetUserSPNs.py lets us request the TGS and extract the hash for offline cracking.
+Cracking of Kerberos TGS Hash
 ![Hashcat Crack](./images/mdp_admin.png)
 
-## 5. Post-Exploitation
-Un shell interactif a été obtenu via `wmiexec.py` (exécution fileless) pour valider l'accès root.
+## 6. Post-Exploitation & Proof of Concept
+
+To finalize the audit and confirm full control over the domain controller, I used the Administrator credentials with wmiexec.py from the Impacket suite.
+
+This tool provides an interactive shell using the Windows Management Instrumentation (WMI) protocol. It is a "fileless" method, meaning it executes commands without leaving heavy traces on the target's disk.
+
+With this access, I successfully retrieved the final flags and validated the total compromise of the Active Directory domain.
 
 ![Root Flag](./images/root.png)
 
-## 🛡️ Remédiations préconisées
-1. Appliquer le correctif **MS14-025** pour interdire le stockage de mots de passe dans les fichiers XML de GPP.
-2. Utiliser des **Group Managed Service Accounts (gMSA)** avec des mots de passe complexes (25+ caractères) pour mitiger le Kerberoasting.
+The final flag can be found at C:\Users\Administrator\Desktop\root.txt .
+
+## Recommended Removals & Security Best Practices
+
+To secure the environment and prevent similar attacks in the future, I recommend the following actions:
+1. Fix the GPP Vulnerability (Initial Access)
+
+    Apply Patch MS14-025: This update prevents Windows from storing passwords in the Group Policy Preference (GPP) XML files.
+
+    Clean up SYSVOL: Administrators should manually search for and delete any existing Groups.xml files that contain the cpassword attribute in the SYSVOL share.
+
+2. Mitigate Kerberoasting (Privilege Escalation)
+
+    Password Complexity: Enforce a strong password policy for service accounts. Passwords should be long (over 25 characters) and complex to make offline cracking impossible.
+
+3. General Hardening
+
+    Disable Guest/Anonymous Access: Restrict SMB share permissions to ensure that sensitive folders like Replication cannot be read without proper authentication.
