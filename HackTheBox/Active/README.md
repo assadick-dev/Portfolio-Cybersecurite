@@ -10,16 +10,33 @@ L'objectif était d'évaluer la sécurité d'un contrôleur de domaine. L'audit 
 ## 2. Énumération & Reconnaissance avec Nmap
 Nous allons commencer par un scan nmap de tous les ports de la machine pour decouvrir les differents services fonctionnant sur la cible.
 
-![Nmap Scan](./images/nmap-scan)
+![Nmap Scan](./images/nmap-scan.png)
 
-## 3. Accès Initial (Exploitation GPP)
-Le partage `Replication` contenait une réplique du dossier `SYSVOL`. Une recherche récursive a permis d'extraire le fichier `Groups.xml`.
+Nmap shows that the target is an Active Directory domain controller for active.htb. The DNS version (6.1) confirms that the operating system is Windows Server 2008 R2 SP1. I added this domain to my /etc/hosts file to help my tools communicate correctly with the target during the next steps.
 
-![Récupération XML](./images/mgetSMB.png)
 
-Ce fichier contenait un `cpassword`. En exploitant la clé AES statique de Microsoft via `gpp-decrypt`, les identifiants de l'utilisateur `SVC_TGS` ont été compromis.
+
+## 3. 3. SMB Enumeration
+Since port 445 was open, I checked for anonymous access to the SMB shares. 
+![Nmap Scan](./images/nxc.png)
+
+Using NetExec (formerly CrackMapExec), I discovered that the Replication share was readable without any credentials.
+
+Let's connect to the Replication share 
+![Nmap Scan](./images/smbconnect.png)
+
+The Replication share usually contains Group Policy Objects (GPOs). I searched through the directories and found a file named Groups.xml.
+
+![Nmap Scan](./images/mgetSMB.png)
+
+
+This file is a "gold mine" because it contains a cpassword — an encrypted password for the SVC_TGS user.
+
+Microsoft used to store passwords this way, and although they are encrypted, the AES key is public knowledge. I used the gpp-decrypt tool to recover the password in cleartext.
+
 
 ![Déchiffrement GPP](./images/cleGPP.png)
+
 
 **Flag Utilisateur :**
 ![User Flag](./images/initial_access.png)
