@@ -27,7 +27,7 @@ By creating a new "basket" and configuring it to forward requests to `http://127
 ![Maltrail via SSRF](./images/matrail.png)
 
 ## 4. Foothold: Maltrail RCE
-**Maltrail v0.53** is vulnerable to an **OS Command Injection** via the `username` parameter on the login page. I utilized an exploit script to inject a reverse shell payload through this parameter.
+**Maltrail v0.53** is vulnerable to an **OS Command Injection** via the `username` parameter on the login page. I utilized an [exploit script](./exploit.py) to inject a reverse shell payload through this parameter.
 
 ![Exploit Execution](./images/exploit_run.png)
 
