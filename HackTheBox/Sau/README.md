@@ -48,8 +48,6 @@ While checking sudo privileges with `sudo -l`, I discovered that the user **puma
 2. By typing `!sh` within the pager interface, I successfully escaped to a shell with **root** privileges.
 3. Full system compromise was confirmed by retrieving the root flag.
 
-![Root Flag Proof](./images/priv-scal.png)
-
 ## 6. Post-Exploitation
 Confirmation of the solve on the Hack The Box platform.
 
