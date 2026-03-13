@@ -5,10 +5,10 @@
 | **Sau** | 10.129.229.26 | Easy | Linux (Ubuntu) |
 
 ## 1. Executive Summary
-The audit of the "Sau" machine revealed a sophisticated attack chain involving web service vulnerabilities and system misconfigurations. By exploiting a **Server-Side Request Forgery (SSRF)**, I bypassed firewall restrictions to access an internal monitoring tool. A subsequent **Remote Code Execution (RCE)** provided initial access as a low-privilege user, which was eventually elevated to **Root** privileges by exploiting a misconfigured `sudo` permission on a system utility.
+The audit of the "Sau" machine revealed a sophisticated attack chain involving web service vulnerabilities and system misconfigurations. By exploiting a **Server-Side Request Forgery (SSRF)**, I bypassed firewall restrictions to access an internal monitoring tool. A subsequent **Remote Code Execution (RCE)** provided initial access as a low-privilege user, which was eventually elevated to **Root** privileges by exploiting a misconfigured `sudo` permission.
 
 ## 2. Reconnaissance & Enumeration (Nmap)
-Initial reconnaissance began with a comprehensive Nmap scan to identify active services and the target's attack surface.
+Initial reconnaissance began with an Nmap scan to identify active services and the target's attack surface.
 
 ![Nmap Scan](./images/nmap-scan.png)
 
@@ -22,12 +22,17 @@ The **Request Baskets** service (v1.2.1) was found to be vulnerable to **SSRF** 
 
 ![Request Baskets Interface](./images/basket-site.png)
 
-By creating a new "basket" and configuring it to forward requests to `http://127.0.0.1:80/` with the **Proxy Response** setting enabled, I successfully reached an internal instance of **Maltrail (v0.53)**.
+**Configuration of the SSRF:**
+I created a basket and configured the settings to point to the internal port 80. By enabling **Proxy Response**, the server returns the output of the internal service directly to my browser.
+
+![SSRF Configuration](./images/config-setting.png)
+
+This configuration allowed me to reach an internal instance of **Maltrail (v0.53)** that was previously hidden behind the firewall.
 
 ![Maltrail via SSRF](./images/matrail.png)
 
 ## 4. Foothold: Maltrail RCE
-**Maltrail v0.53** is vulnerable to an **OS Command Injection** via the `username` parameter on the login page. I utilized an [exploit script](./exploit.py) to inject a reverse shell payload through this parameter.
+**Maltrail v0.53** is vulnerable to an **OS Command Injection** via the `username` parameter. I utilized an [exploit script](./exploit.py) to inject a reverse shell payload through this parameter.
 
 ![Exploit Execution](./images/exploit_run.png)
 
@@ -44,9 +49,11 @@ While checking sudo privileges with `sudo -l`, I discovered that the user **puma
 ![Sudo Privileges](./images/priv-scal.png)
 
 **Exploitation Process:**
-1. Running the command triggered the **pager** (less) because the output was longer than the terminal height.
+1. Running the command triggered the **pager** (less).
 2. By typing `!sh` within the pager interface, I successfully escaped to a shell with **root** privileges.
 3. Full system compromise was confirmed by retrieving the root flag.
+
+![Root Flag Proof](./images/priv-scal.png)
 
 ## 6. Post-Exploitation
 Confirmation of the solve on the Hack The Box platform.
@@ -54,8 +61,6 @@ Confirmation of the solve on the Hack The Box platform.
 ![HTB Solve](./images/pwned.png)
 
 ## 🛡️ Recommended Remediations
-1. **Service Updates**: Update **Request Baskets** to a version > 1.2.1 and **Maltrail** to the latest version to patch SSRF and RCE vulnerabilities.
+1. **Service Updates**: Update **Request Baskets** and **Maltrail** to their latest versions to patch SSRF and RCE vulnerabilities.
 2. **Sudo Hardening**: Remove the `NOPASSWD` entry for `systemctl`. If access is necessary, ensure the pager is disabled (e.g., by using the `--no-pager` flag) to prevent shell escapes.
 3. **Network Security**: Review internal firewall rules to ensure that sensitive services on `127.0.0.1` are not exposed through application-level proxies.
-
----
