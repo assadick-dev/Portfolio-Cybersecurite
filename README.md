@@ -8,8 +8,7 @@ Bienvenue sur mon repository dédié aux rapports d'audit technique et à la ré
 ## 🚀 À propos de moi
 - **🎯 Objectif :** Recherche d'une alternance en tant que Pentester / Analyste SOC.
 - **📚 Formation :** M1 CDSI @ INSA Hauts-de-France.
-- **🏆 Certifications & Stats :** - **Hack The Box :** Top 9% | 40% du parcours CPTS validé.
-  - **TryHackMe :** [Ton Rang / Stats].
+- **🏆 Certifications & Stats :** - **Hack The Box :** Top 9% | 60% du parcours CPTS validé.
 
 ## 📂 Structure du Repository
 - `📁 HackTheBox/` : Rapports détaillés sur les machines retirées (Active, Sauna, etc.).
