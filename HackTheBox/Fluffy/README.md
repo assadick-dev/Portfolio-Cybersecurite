@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/fluffy.png" alt="Fluffy — Solved" width="500">
+  <img src="./images/fluffy.png" alt="Fluffy — Solved" width="700">
 </p>
 
 <p align="center">
@@ -8,17 +8,7 @@
   <img src="https://img.shields.io/badge/Difficulty-Easy-4CAF50?style=flat-square">
   <img src="https://img.shields.io/badge/Focus-AD%20%7C%20ADCS%20ESC16-red?style=flat-square">
 </p>
-| | |
-|---|---|
-| **Machine** | Fluffy |
-| **Platform** | Hack The Box |
-| **OS** | Windows Server 2019 (Build 17763) — Domain Controller |
-| **Difficulty** | Easy |
-| **Domain** | `fluffy.htb` |
-| **IP** | `10.129.232.88` |
-| **Provided credentials** | `j.fleischman:J0elTHEM4n1990!` |
 
----
 
 ## Attack path summary (TL;DR)
 
