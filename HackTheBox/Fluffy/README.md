@@ -120,7 +120,7 @@ smb: \> ls
 
 The PDF sitting on the share is a patch notice listing recent CVEs:
 
-![Upgrade_Notice.pdf found on the IT share](./img/upgrade-notice.png)
+![Upgrade_Notice.pdf found on the IT share](./images/upgrade-notice.png)
 
 | CVE ID | Severity |
 |---|---|
@@ -194,11 +194,11 @@ p.agila:prometheusx-303
 
 `p.agila` → *(MemberOf)* → **Service Account Managers** → *(GenericAll)* → **Service Accounts**
 
-![p.agila → MemberOf → Service Account Managers → GenericAll → Service Accounts](./img/p.agila-outbound.png)
+![p.agila → MemberOf → Service Account Managers → GenericAll → Service Accounts](./images/p.agila-outbound.png)
 
 And the **Service Accounts** group holds **GenericWrite** over the three service accounts:
 
-![Service Accounts → GenericWrite → ldap_svc / winrm_svc / ca_svc](./img/service-accounts-genericwrite.png)
+![Service Accounts → GenericWrite → ldap_svc / winrm_svc / ca_svc](./imgages/service-accounts-genericwrite.png)
 
 **Turning it into an attack:** `p.agila` controls (GenericAll) the *Service Accounts* group. So it can **add itself** to it and inherit **GenericWrite** over `ldap_svc`, `winrm_svc` and `ca_svc`.
 
