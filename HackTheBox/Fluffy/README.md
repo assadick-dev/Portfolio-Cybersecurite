@@ -1,9 +1,13 @@
 <p align="center">
-  <img src="./images/fluffy.png" alt="Fluffy" width="160">
+  <img src="./images/fluffy.png" alt="Fluffy — Solved" width="500">
 </p>
 
-<h1 align="center">Fluffy — HackTheBox Write-up</h1>
-
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-HackTheBox-9FEF00?style=flat-square&logo=hackthebox&logoColor=black">
+  <img src="https://img.shields.io/badge/OS-Windows-0078D6?style=flat-square&logo=windows&logoColor=white">
+  <img src="https://img.shields.io/badge/Difficulty-Easy-4CAF50?style=flat-square">
+  <img src="https://img.shields.io/badge/Focus-AD%20%7C%20ADCS%20ESC16-red?style=flat-square">
+</p>
 | | |
 |---|---|
 | **Machine** | Fluffy |
