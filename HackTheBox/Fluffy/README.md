@@ -1,4 +1,8 @@
-# Fluffy — HackTheBox Write-up
+<p align="center">
+  <img src="./images/fluffy.png" alt="Fluffy" width="160">
+</p>
+
+<h1 align="center">Fluffy — HackTheBox Write-up</h1>
 
 | | |
 |---|---|
@@ -120,7 +124,7 @@ smb: \> ls
 
 The PDF sitting on the share is a patch notice listing recent CVEs:
 
-![Upgrade_Notice.pdf found on the IT share](./images/upgrade-notice.png)
+![Upgrade_Notice.pdf found on the IT share](./images/upgrade_notice.png)
 
 | CVE ID | Severity |
 |---|---|
