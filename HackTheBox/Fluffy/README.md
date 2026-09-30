@@ -198,7 +198,7 @@ p.agila:prometheusx-303
 
 And the **Service Accounts** group holds **GenericWrite** over the three service accounts:
 
-![Service Accounts → GenericWrite → ldap_svc / winrm_svc / ca_svc](./imgages/service-accounts-genericwrite.png)
+![Service Accounts → GenericWrite → ldap_svc / winrm_svc / ca_svc](./images/service-accounts-genericwrite.png)
 
 **Turning it into an attack:** `p.agila` controls (GenericAll) the *Service Accounts* group. So it can **add itself** to it and inherit **GenericWrite** over `ldap_svc`, `winrm_svc` and `ca_svc`.
 
